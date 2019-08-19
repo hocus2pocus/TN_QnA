@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'User is able to browse a list of questions', %q{
-  In order to know if my question was already answered
+  In order to know if my question was already asked
   As a user or a guest
   I'd like to be able to view the list of all the questions
 } do

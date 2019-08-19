@@ -24,8 +24,18 @@ feature 'User can create answer for the question', %q{
       expect(page).to have_content 'My answer'
     end
 
-    scenario 'answers the question with errors'
+    scenario 'answers the question with errors' do
+      click_on 'Submit'
+
+      expect(page).to have_content "Answer NOT saved."
+    end
   end
 
-  scenario 'Unauthenticated user tries to answer the question'
+  scenario 'Unauthenticated user tries to answer the question' do
+    visit question_path(question)
+    fill_in 'Answer', with: 'My answer'
+    click_on 'Submit'
+
+    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+  end
 end

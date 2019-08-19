@@ -1,10 +1,11 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!, only: %i[create]
   before_action :load_question, only: %i[new create]
   before_action :load_answer, only: %i[show edit update destroy]
 
-  def index
-    @answers = @question.answers.all
-  end
+  # def index
+  #   @answers = @question.answers.all
+  # end
 
   def show
   end
@@ -19,7 +20,7 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to @question, notice: 'Answer saved.'
     else
-      render 'question/show'
+      redirect_to @question, notice: 'Answer NOT saved.'
     end
   end
 
