@@ -1,5 +1,5 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: %i[create]
+  before_action :authenticate_user!
   before_action :load_question, only: %i[new create]
   before_action :load_answer, only: %i[show edit update destroy]
 
@@ -15,12 +15,22 @@ class AnswersController < ApplicationController
   end
 
   def create
-    @answer = @question.answers.new(answer_params)
+    @answer = current_user.created_answers.new(answer_params)
+    @answer.question_id = @question.id
 
-    if @answer.save
+    if @answer.save!
       redirect_to @question, notice: 'Answer saved.'
     else
       redirect_to @question, notice: 'Answer NOT saved.'
+    end
+  end
+
+  def destroy
+    if @answer.author == current_user
+      @answer.destroy
+      redirect_to @answer.question, notice: "Answer deleted."
+    else
+      redirect_to @answer.question, notice: "You can't delete someone else's answer."
     end
   end
 

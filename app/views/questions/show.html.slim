@@ -6,6 +6,7 @@ p= @question.body
     tr
       - @answers.each do |answer|
           td= answer.body
+          td= button_to "Delete answer", answer_path(answer), method: :delete
 
 = form_with model: [@question, @answer], local: true do |f|
   = f.label :body, "Answer"
