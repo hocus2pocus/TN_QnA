@@ -7,18 +7,18 @@ class AnswersController < ApplicationController
   #   @answers = @question.answers.all
   # end
 
-  def show
-  end
+  # def show
+  # end
 
-  def new
-    @answer = @question.answers.new
-  end
+  # def new
+  #   @answer = @question.answers.new
+  # end
 
   def create
     @answer = current_user.created_answers.new(answer_params)
     @answer.question_id = @question.id
 
-    if @answer.save!
+    if @answer.save
       redirect_to @question, notice: 'Answer saved.'
     else
       redirect_to @question, notice: 'Answer NOT saved.'

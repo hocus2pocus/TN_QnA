@@ -1,32 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:answer) { create(:answer) }
-  let(:question) { create(:question) }
+  let(:author) { create(:user) }
+  let(:question) { create(:question, author_id: author.id) }
+  let!(:answer) { create(:answer, question_id: question.id, author_id: author.id) }
 
-  describe 'GET #show' do
-    it 'assigns the requested question to @question' do
-      get :show, params: { id: answer }
-      expect(assigns(:answer)).to eq(answer)
-    end
-
-    it 'renders show view' do
-      get :show, params: { id: answer }
-      expect(response).to render_template :show
-    end
-  end
-
-  describe 'GET #new' do
-    it 'assigns a new Answer to @answer' do
-      get :new, params: { question_id: question }
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
-
-    it 'renders new view' do
-      get :new, params: { question_id: question }
-      expect(response).to render_template :new
-    end
-  end
+  before { login(author) }
 
   describe 'POST #create' do
     it "proves that new Answer is owned by @question" do
@@ -41,7 +20,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'redirects to show view' do
         post :create, params: { answer: attributes_for(:answer), question_id: question }
-        expect(response).to redirect_to assigns(:answer)
+        expect(response).to redirect_to assigns(:question)
       end
     end
 
@@ -52,8 +31,19 @@ RSpec.describe AnswersController, type: :controller do
 
       it 're-renders new view' do
         post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }
-        expect(response).to render_template :new
+        expect(response).to redirect_to assigns(:question)
       end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    it 'deletes the answer' do
+      expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
+    end
+
+    it 'redirects to index' do
+      delete :destroy, params: { id: answer }
+      expect(response).to redirect_to answer.question
     end
   end
 end
