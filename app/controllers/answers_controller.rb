@@ -15,18 +15,20 @@ class AnswersController < ApplicationController
   # end
 
   def create
-    @answer = current_user.created_answers.new(answer_params)
-    @answer.question_id = @question.id
+    @answer = current_user.answers.new(answer_params)
+    @answer.question = @question
 
     if @answer.save
       redirect_to @question, notice: 'Answer saved.'
     else
-      redirect_to @question, notice: 'Answer NOT saved.'
+      @answers = @question.answers.all
+      flash.now[:alert] = 'Answer NOT saved.'
+      render 'questions/show'
     end
   end
 
   def destroy
-    if @answer.author == current_user
+    if current_user.author?(@answer)
       @answer.destroy
       redirect_to @answer.question, notice: "Answer deleted."
     else

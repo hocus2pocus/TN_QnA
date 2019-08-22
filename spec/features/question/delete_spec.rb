@@ -7,7 +7,7 @@ feature 'User can delete the question', %q{
 } do
 
   given(:author) { create(:user) }
-  given(:question) { create(:question, author_id: author.id) }
+  given!(:question) { create(:question, user_id: author.id) }
 
   scenario 'An author of the question tries to delete it' do
     sign_in(author)
@@ -26,5 +26,11 @@ feature 'User can delete the question', %q{
     click_on 'Delete question'
     expect(page).to have_content "You can't delete someone else's question."
     expect(page).to have_content question.title
+  end
+
+  scenario 'Unauthenticated user tries to delete a question' do
+    visit question_path(question)
+    click_on 'Delete question'
+    expect(page).to have_content "You need to sign in or sign up before continuing."
   end
 end

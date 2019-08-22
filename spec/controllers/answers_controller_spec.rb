@@ -1,11 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:author) { create(:user) }
-  let(:question) { create(:question, author_id: author.id) }
-  let!(:answer) { create(:answer, question_id: question.id, author_id: author.id) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user_id: user.id)}
 
-  before { login(author) }
+  before { login(user) }
 
   describe 'POST #create' do
     it "proves that new Answer is owned by @question" do
@@ -31,12 +30,14 @@ RSpec.describe AnswersController, type: :controller do
 
       it 're-renders new view' do
         post :create, params: { answer: attributes_for(:answer, :invalid), question_id: question }
-        expect(response).to redirect_to assigns(:question)
+        expect(response).to render_template 'questions/show'
       end
     end
   end
 
   describe 'DELETE #destroy' do
+    let!(:answer) { create(:answer, question_id: question.id, user_id: user.id) }
+
     it 'deletes the answer' do
       expect { delete :destroy, params: { id: answer } }.to change(Answer, :count).by(-1)
     end

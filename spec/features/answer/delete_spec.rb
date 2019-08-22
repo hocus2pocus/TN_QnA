@@ -6,12 +6,12 @@ feature 'User can delete the answer', %q{
   I'd like to be able to delete it
 } do
 
-  given(:author) { create(:user) }
-  given(:question) { create(:question, author_id: author.id) }
-  given!(:answer) { create(:answer, question_id: question.id, author_id: author.id) }
+  given(:user) { create(:user) }
+  given!(:question) { create(:question, user_id: user.id) }
+  given!(:answer) { create(:answer, question_id: question.id, user_id: user.id) }
 
   scenario 'An author of the answer tries to delete it' do
-    sign_in(author)
+    sign_in(user)
 
     visit question_path(question)
     click_on 'Delete answer'
@@ -27,5 +27,11 @@ feature 'User can delete the answer', %q{
     click_on 'Delete answer'
     expect(page).to have_content "You can't delete someone else's answer."
     expect(page).to have_content answer.body
+  end
+
+  scenario 'Unauthenticated user tries to delete an answer' do
+    visit question_path(question)
+    click_on 'Delete answer'
+    expect(page).to have_content "You need to sign in or sign up before continuing."
   end
 end

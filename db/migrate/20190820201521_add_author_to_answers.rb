@@ -1,5 +1,5 @@
 class AddAuthorToAnswers < ActiveRecord::Migration[5.2]
   def change
-    add_reference :answers, :author, foreign_key: { to_table: :users }, null: false
+    add_reference :answers, :user, foreign_key: true, null: false
   end
 end

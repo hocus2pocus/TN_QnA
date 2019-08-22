@@ -5,12 +5,12 @@ feature 'User is able to browse a list of answers on the question page', %q{
   As a user or a guest
   I'd like to be able to view the list of answers on the question page
 } do
-  scenario 'User tries to browse the question page' do
-    question = create(:question)
-    answers = create_list(:answer, 3, question_id: question.id)
 
+  given!(:question) { create(:question) }
+  given!(:answers) { create_list(:answer, 3, question_id: question.id) }
+
+  scenario 'User tries to browse the question page' do
     visit question_path(question)
     answers.each { |answer| expect(page).to have_content answer.body }
-    answers.each { |answer| expect(answer.question_id).to eq question.id }
   end
 end
