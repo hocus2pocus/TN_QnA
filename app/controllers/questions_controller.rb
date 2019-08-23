@@ -16,6 +16,9 @@ class QuestionsController < ApplicationController
   end
 
   def edit
+    unless current_user.author?(@question)
+      redirect_to @question, notice: "You can't edit someone else's question."
+    end
   end
 
   def create
@@ -30,10 +33,14 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    if @question.update(question_params)
-      redirect_to @question
+    if current_user.author?(@question)
+      if @question.update(question_params)
+        redirect_to @question, notice: "Question edited."
+      else
+        render :edit
+      end
     else
-      render :edit
+      redirect_to @question, notice: "You can't edit someone else's question."
     end
   end
 
