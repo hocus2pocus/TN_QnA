@@ -19,18 +19,15 @@ feature 'User can delete the question', %q{
   end
 
   scenario 'User which is not an author of the question tries to delete it' do
-    user = create(:user)
-    sign_in(user)
+    non_author = create(:user)
+    sign_in(non_author)
 
     visit question_path(question)
-    click_on 'Delete question'
-    expect(page).to have_content "You can't delete someone else's question."
-    expect(page).to have_content question.title
+    expect(page).to_not have_content 'Delete question'
   end
 
   scenario 'Unauthenticated user tries to delete a question' do
     visit question_path(question)
-    click_on 'Delete question'
-    expect(page).to have_content "You need to sign in or sign up before continuing."
+    expect(page).to_not have_content 'Delete question'
   end
 end

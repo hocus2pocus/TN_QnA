@@ -20,18 +20,15 @@ feature 'User can delete the answer', %q{
   end
 
   scenario 'User which is not an author of the answer tries to delete it' do
-    user = create(:user)
-    sign_in(user)
+    non_author = create(:user)
+    sign_in(non_author)
 
     visit question_path(question)
-    click_on 'Delete answer'
-    expect(page).to have_content "You can't delete someone else's answer."
-    expect(page).to have_content answer.body
+    expect(page).to_not have_content 'Delete answer'
   end
 
   scenario 'Unauthenticated user tries to delete an answer' do
     visit question_path(question)
-    click_on 'Delete answer'
-    expect(page).to have_content "You need to sign in or sign up before continuing."
+    expect(page).to_not have_content 'Delete answer'
   end
 end

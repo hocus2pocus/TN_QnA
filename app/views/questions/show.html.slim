@@ -2,15 +2,18 @@
 
 h1= @question.title
 p= @question.body
-= button_to "Delete question", question_path(@question), method: :delete
+- if current_user && current_user.author?(@question)
+  = button_to "Delete question", question_path(@question), method: :delete
 
 - if @answers.any?
     tr
       - @answers.each do |answer|
           td= answer.body
-          td= button_to "Delete answer", answer_path(answer), method: :delete
+          - if current_user && current_user.author?(answer)
+            td= button_to "Delete answer", answer_path(answer), method: :delete
 
-= form_with model: [@question, @answer], local: true do |f|
-  = f.label :body, "Answer"
-  = f.text_area :body
-  = f.submit 'Submit'
+- if current_user
+  = form_with model: [@question, @answer], local: true do |f|
+    = f.label :body, "Answer"
+    = f.text_area :body
+    = f.submit 'Submit'
