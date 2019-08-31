@@ -48,7 +48,7 @@ RSpec.describe QuestionsController, type: :controller do
       before { get :new }
 
       it 'renders login form' do
-        expect(response).to redirect_to '/users/sign_in'
+        expect(response).to redirect_to new_user_session_path
       end
     end
   end
@@ -81,7 +81,7 @@ RSpec.describe QuestionsController, type: :controller do
       before { get :edit, params: { id: question } }
 
       it 'renders login form' do
-        expect(response).to redirect_to '/users/sign_in'
+        expect(response).to redirect_to new_user_session_path
       end
     end
   end
@@ -117,7 +117,7 @@ RSpec.describe QuestionsController, type: :controller do
       before { post :create, params: { question: attributes_for(:question) } }
 
       it 'renders login form' do
-        expect(response).to redirect_to '/users/sign_in'
+        expect(response).to redirect_to new_user_session_path
       end
     end
   end
@@ -191,7 +191,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'renders login form' do
         patch :update, params: { id: question, question: { title: 'new title', body: 'new body' } }
-        expect(response).to redirect_to '/users/sign_in'
+        expect(response).to redirect_to new_user_session_path
       end
     end
   end
@@ -230,7 +230,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'renders login form' do
         delete :destroy, params: { id: question }
-        expect(response).to redirect_to '/users/sign_in'
+        expect(response).to redirect_to new_user_session_path
       end
     end
   end

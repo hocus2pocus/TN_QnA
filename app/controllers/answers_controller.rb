@@ -2,6 +2,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :load_question, only: %i[new create]
   before_action :load_answer, only: %i[show edit update destroy]
+  before_action :check_for_author, only: %i[update destroy]
 
   # def index
   #   @answers = @question.answers.all
@@ -28,12 +29,15 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user.author?(@answer)
-      @answer.destroy
-      redirect_to @answer.question, notice: "Answer deleted."
-    else
-      redirect_to @answer.question, notice: "You can't delete someone else's answer."
-    end
+    # if current_user.author?(@answer)
+    #   @answer.destroy
+    #   redirect_to @answer.question, notice: "Answer deleted."
+    # else
+    #   redirect_to @answer.question, notice: "You can't delete someone else's answer."
+    # end
+
+    @answer.destroy
+    redirect_to @answer.question, notice: "Answer deleted."
   end
 
   private
@@ -48,5 +52,11 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body)
+  end
+
+  def check_for_author
+    unless current_user.author?(@answer)
+      redirect_to @answer.question, notice: "Only an author can do this."
+    end
   end
 end

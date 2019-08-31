@@ -44,7 +44,7 @@ RSpec.describe AnswersController, type: :controller do
 
         it 'renders login form' do
           post :create, params: { answer: attributes_for(:answer), question_id: question }
-          expect(response).to redirect_to '/users/sign_in'
+          expect(response).to redirect_to new_user_session_path
         end
       end
     end
@@ -82,7 +82,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'renders login form' do
         delete :destroy, params: { id: answer }
-        expect(response).to redirect_to '/users/sign_in'
+        expect(response).to redirect_to new_user_session_path
       end
     end
   end
