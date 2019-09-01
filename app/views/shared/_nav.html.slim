@@ -1,0 +1,4 @@
+- if current_user
+  = link_to "Sign out", destroy_user_session_path, method: :delete
+- else
+  = link_to "Join", new_user_registration_path
